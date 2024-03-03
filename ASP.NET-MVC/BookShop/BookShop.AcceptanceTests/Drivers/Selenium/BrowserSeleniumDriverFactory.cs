@@ -1,21 +1,20 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
-using TechTalk.SpecRun;
 
 namespace BookShop.AcceptanceTests.Drivers.Selenium
 {
     public class BrowserSeleniumDriverFactory
     {
-        private readonly TestRunContext _testRunContext;
         private readonly WebServerDriver _webServerDriver;
 
-        public BrowserSeleniumDriverFactory(TestRunContext testRunContext, WebServerDriver webServerDriver)
+        public BrowserSeleniumDriverFactory( WebServerDriver webServerDriver)
         {
-            _testRunContext = testRunContext;
             _webServerDriver = webServerDriver;
         }
 
@@ -44,7 +43,8 @@ namespace BookShop.AcceptanceTests.Drivers.Selenium
 
         private IWebDriver GetFirefoxDriver()
         {
-            var firefoxDriverService = FirefoxDriverService.CreateDefaultService(_testRunContext.TestDirectory);
+            var testDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            var firefoxDriverService = FirefoxDriverService.CreateDefaultService(testDirectory);
             return new FirefoxDriver(firefoxDriverService)
             {
                 Url = _webServerDriver.Hostname,
@@ -53,7 +53,8 @@ namespace BookShop.AcceptanceTests.Drivers.Selenium
 
         private IWebDriver GetChromeDriver(bool isHeadless)
         {
-            var chromeDriverService = ChromeDriverService.CreateDefaultService(_testRunContext.TestDirectory);
+            var testDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            var chromeDriverService = ChromeDriverService.CreateDefaultService(testDirectory);
 
             var chromeOptions = new ChromeOptions();
 
@@ -78,7 +79,9 @@ namespace BookShop.AcceptanceTests.Drivers.Selenium
 
 
             };
-            return new InternetExplorerDriver(InternetExplorerDriverService.CreateDefaultService(_testRunContext.TestDirectory), internetExplorerOptions)
+            var testDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
+            return new InternetExplorerDriver(InternetExplorerDriverService.CreateDefaultService(testDirectory), internetExplorerOptions)
             {
                 Url = _webServerDriver.Hostname,
 

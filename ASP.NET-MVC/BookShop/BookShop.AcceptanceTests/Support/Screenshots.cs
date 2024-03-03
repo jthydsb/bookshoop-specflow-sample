@@ -18,8 +18,8 @@ namespace BookShop.AcceptanceTests.Support
             _configurationDriver = configurationDriver;
         }
 
-        [AfterStep()]
-        public void MakeScreenshotAfterStep()
+        //[AfterStep()]
+        /*public void MakeScreenshotAfterStep()
         {
             if (_configurationDriver.Mode.ToUpper() == "INTEGRATED")
             {
@@ -34,6 +34,6 @@ namespace BookShop.AcceptanceTests.Support
 
                 Console.WriteLine($"SCREENSHOT[ {tempFileName} ]SCREENSHOT");
             }
-        }
+        }*/
     }
 }

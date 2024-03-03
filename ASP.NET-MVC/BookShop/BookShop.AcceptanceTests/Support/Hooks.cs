@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using BoDi;
 using BookShop.AcceptanceTests.Drivers;
 using BookShop.AcceptanceTests.Drivers.Integrated;
@@ -7,18 +8,14 @@ using BookShop.Mvc.Logic;
 using BookShop.Mvc.Models;
 using Microsoft.Extensions.Configuration;
 using TechTalk.SpecFlow;
-using TechTalk.SpecRun;
 
 namespace BookShop.AcceptanceTests.Support
 {
     [Binding]
     public class Hooks
     {
-        private readonly TestRunContext _testRunContext;
-        
-        public Hooks(TestRunContext testRunContext)
+        public Hooks()
         {
-            _testRunContext = testRunContext;
         }
 
         [BeforeScenario(Order = 1)]
@@ -26,8 +23,10 @@ namespace BookShop.AcceptanceTests.Support
         {
             objectContainer.RegisterInstanceAs(new DatabaseContext());
 
+            var testDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
             IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile(Path.Combine(_testRunContext.TestDirectory, "appsettings.json"), optional: true, reloadOnChange: true)
+                .AddJsonFile(Path.Combine(testDirectory, "appsettings.json"), optional: true, reloadOnChange: true)
                 .Build();
 
             objectContainer.RegisterInstanceAs(config);
